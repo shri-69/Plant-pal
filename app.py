@@ -1,7 +1,7 @@
 import streamlit as st
-from tensorflow.keras.models import load_model
+from keras.models import load_model
 import numpy as np
-from tensorflow.keras.preprocessing import image
+from keras.preprocessing import image
 
 # Load model
 model = load_model('plant_disease_model.h5')

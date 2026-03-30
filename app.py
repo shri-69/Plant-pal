@@ -179,11 +179,31 @@ disease_info = {
 
 }
 
+language = st.selectbox("🌐 Select Language", ["English", "Hindi"])
+
+translations = { 
+    "English": { 
+        "title": "🌱 PlantPal - Plant Disease Detector", 
+        "upload": "Upload a plant leaf image", 
+        "disease": "Disease", 
+        "cause": "Cause", 
+        "cure": "Cure", 
+        "confidence": "Confidence" 
+    }, 
+    "Hindi": { 
+        "title": "🌱 प्लांटपाल - पौधों की बीमारी पहचान", 
+        "upload": "पौधे की पत्ती की फोटो अपलोड करें", 
+        "disease": "बीमारी", 
+        "cause": "कारण", 
+        "cure": "इलाज", 
+        "confidence": "विश्वास स्तर" 
+        } 
+        } 
+text = translations[language]
 
 # UI
-st.title("🌱 PlantPal - Plant Disease Detector")
-st.markdown("AI-powered plant disease detection system")
-uploaded_file = st.file_uploader("Upload a plant leaf image", type=["jpg", "png", "jpeg"])
+st.title(text["title"])
+uploaded_file = st.file_uploader(text["upload"], type=["jpg", "png", "jpeg"])
 
 if uploaded_file is not None:
     img = image.load_img(uploaded_file, target_size=(224, 224))
@@ -196,18 +216,19 @@ if uploaded_file is not None:
     predicted_class = np.argmax(prediction)
     disease = class_names[predicted_class]
 
-    info = disease_info.get(disease, {})
-
-    st.subheader(f"🌿 Disease: {disease}")
-    st.write("⚠ Cause:", info.get("cause", "Not available"))
-    st.write("💊 Cure:", info.get("cure", "Not available"))
-    for disease in class_names:
-        if disease not in disease_info:
-            disease_info[disease] = {
-            "cause": "Information not available",
-            "cure": "Consult agricultural expert"
-        }
-    confidence = np.max(prediction) * 100
-    st.info(f"Confidence: {confidence:.2f}%")        
     clean_name = disease.replace("___", " → ").replace("_", " ")
+    
+    info = disease_info.get(disease, {})
+    cause = info.get("cause", "Not available") 
+    cure = info.get("cure", "Not available")
+
+    confidence = np.max(prediction) * 100
+      
+
     st.success(f"🌿 Disease: {clean_name}")
+    st.info(f"Confidence: {confidence:.2f}%") 
+
+    st.warning(f"{text['cause']}:{cause}")
+    st.success(f"{text['cure']}:{cure}")
+
+    
